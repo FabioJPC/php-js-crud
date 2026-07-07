@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => renderUsers(apiUrl));
 usersSection.addEventListener('click', async (event) => {
     const {target} = event;
 
+    if(target.dataset.action === 'edit') {
+        enterEditMode(getUserFromCard(target));
+    }
+
     if(target.dataset.action === 'delete') {
         const user = getUserFromCard(target);
 
@@ -21,6 +25,9 @@ usersSection.addEventListener('click', async (event) => {
 
         try {
             await deleteUser(apiUrl, user.id);
+
+            if (editingId === user.id) exitEditMode();
+
             renderUsers(apiUrl);
         } catch (error) {
             showError(error.message);
@@ -39,7 +46,27 @@ form.addEventListener('submit', async (event) => {
     hideError();
 
     try{
-        await createUser(apiUrl, {name, age, email});
+        const changed = {}
+        if(editingId !== null) {
+            if (name !== originalUser.name) changed.name = name;
+            if (Number(age) !== originalUser.age) changed.age = age;
+            if (email !== originalUser.email) changed.email = email;
+
+            if (Object.keys(changed).length === 0) {
+                exitEditMode();
+                return;
+            }
+
+            const allChanged = Object.keys(changed).length === 3;
+
+            if (allChanged) {
+                await updateUser(apiUrl, editingId, { name, age, email });
+            } else {
+                await patchUser(apiUrl, editingId, changed);
+            }
+        } else {
+            await createUser(apiUrl, {name, age, email});
+        }
 
         form.reset();
         renderUsers(apiUrl);
@@ -54,6 +81,32 @@ const cancelBtn = document.getElementById('cancel-edit');
 
 let editingId = null;
 let originalUser = null;
+
+function enterEditMode(user) {
+    editingId = user.id;
+    originalUser = {...user};
+
+    document.getElementById('name').value = user.name;
+    document.getElementById('age').value = user.age;
+    document.getElementById('email').value = user.email;
+
+    formTitle.textContent = 'Edit user';
+    submitBtn.textContent = 'Update';
+    cancelBtn.style.display = '';
+
+    document.getElementById('name').focus();
+}
+
+function exitEditMode() {
+    editingId = null;
+    originalUser = null;
+    formTitle.textContent = 'Create User';
+    submitBtn.textContent = 'Create';
+    cancelBtn.style.display = 'none';
+    form.reset();
+}
+
+cancelBtn.addEventListener('click', exitEditMode);
 
 function showError(message) {
     formError.textContent = message;
