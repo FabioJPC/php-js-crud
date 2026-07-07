@@ -1,9 +1,11 @@
-[
-    "data" : [
+{
+    "nextId": 7,
+    "users": [
         {
-        "name": "Fabio",
-        "age": 28,
-        "email": "fabio@teste.com" 
-    }
+            "name": "Fabio",
+            "age": 28,
+            "email": "fabio@email.com",
+            "id": 5
+        }
     ]
-]
+}

@@ -1,5 +1,5 @@
-import { createElement } from "react";
-import { getUsers } from "../api/read";
+
+import { getUsers } from "../api/read.js";
 
 let usersCache = [];
 
@@ -9,6 +9,7 @@ export function findUserById(id) {
 
 export async function renderUsers(apiUrl) {
     const users = await getUsers(apiUrl);
+
     usersCache = users;
     const usersSection = document.getElementById('users');
 
