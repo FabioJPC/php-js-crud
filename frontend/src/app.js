@@ -3,7 +3,7 @@ import { createUser } from './scripts/api/create.js';
 import { deleteUser } from './scripts/api/delete.js';
 import { patchUser, updateUser } from './scripts/api/update.js';
 
-const apiUrl = 'http://localhost:8000/api/users';
+const apiUrl = 'http://localhost:8080/api/users';
 
 const form = document.getElementById('create-user-form');
 const formError = document.getElementById('form-error');
