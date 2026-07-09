@@ -1,6 +1,7 @@
-CREATE TABLE users (
+CREATE TABLE products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    age INTEGER,
-    email TEXT UNIQUE NOT NULL
+    name VARCHAR(200) NOT NULL,
+    price DECIMAL(8, 2) NOT NULL,
+    stock INTEGER NOT NULL,
+    category VARCHAR(100) NOT NULL
 );

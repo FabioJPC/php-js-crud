@@ -26,26 +26,54 @@ function validateUserFields(array $input): ?string
             return 'Name cannot be empty';
         }
 
-        if (strlen($name) > 100) {
-            return 'Name must be at most 100 characters';
+        if (strlen($name) > 200) {
+            return 'Name must be at most 200 characters';
         }
     }
 
-    if (isset($input['age'])) {
-        if (!is_numeric($input['age'])) {
-            return 'Age must be a number';
+
+    if (isset($input['price'])) {
+        $price = str_replace(',', '.', $input['price']);
+
+        if (!is_numeric($price)) {
+            return 'Price must be a number';
         }
 
-        $age = (int) $input['age'];
+        $price = (float) $price;
 
-        if ($age < 1 || $age > 150) {
-            return 'Age must be between 1 and 150';
+        if ($price < 0) {
+            return 'Price cannot be negative';
+        }
+
+        if (round($price, 2) != $price) {
+           return 'Price can have maximum 2 decimal places';
+        }   
+    }
+
+    if (isset($input['stock'])) {
+        $stock = $input['stock'];
+        if (!is_numeric($stock)) {
+            return "Stock must be a number";
+        }
+
+        if (!filter_var($stock, FILTER_VALIDATE_INT) === false) {
+            return "Stock must be an integer";
+        }
+
+        if ($stock < 0) {
+            return "Stock can't be negative";
         }
     }
 
-    if (isset($input['email'])) {
-        if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
-            return 'Invalid email format';
+    if (isset($input['category'])) {
+        $category = trim($input['category']);
+
+        if ($category == "") {
+            return "Category cannot be empty";
+        }
+
+        if (strlen($category) > 100) {
+            return "Category must be at most 100 characters";
         }
     }
 
