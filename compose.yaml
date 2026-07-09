@@ -15,4 +15,7 @@ services:
     ports:
     - "8000:80"
     volumes:
-      - ./api-crud/data:/data
+      - sqlite_data:/var/www/data
+
+volumes:
+  sqlite_data:
