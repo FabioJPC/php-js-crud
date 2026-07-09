@@ -13,4 +13,6 @@ services:
       context: ./crud-api
       dockerfile: Dockerfile
     ports:
-    - "8080:80"
+    - "8000:80"
+    volumes:
+      - ./api-crud/data:/data

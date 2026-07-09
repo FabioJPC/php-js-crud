@@ -13,20 +13,26 @@ function saveData(string $dataFile, array $data): void
 }
 
 function findUser(int $id): ?array {
-    $db = getdatabase();
+    try{
+        $db = getdatabase();
 
-    $stmt = $db->prepare(
-        "SELECT * FROM users
-        WHERE id = :id"
-    );
+        $stmt = $db->prepare(
+            "SELECT * FROM users
+            WHERE id = :id"
+        );
 
-    $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":id", $id);
 
-    $stmt->execute();
+        $stmt->execute();
 
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $user ?: null;
+        return $user ?: null;
+    }
+    catch (Throwable $e) {
+        logError("A database error has ocurred.", $e);
+        return [];
+    }
 }
 
 function getUsers(): array {
@@ -49,7 +55,7 @@ function insertUser(array $input): ?array
         $db = getDatabase();
     
         $stmt = $db->prepare(
-            "INSERT INTO user (name, age, email)
+            "INSERT INTO users (name, age, email)
             values (:name, :age, :email)"
         );
 
@@ -65,49 +71,55 @@ function insertUser(array $input): ?array
 
         return $user;
     }
-    catch(PDOException $e) {
-        //TODO: log
+    catch(Throwable $e) {
+        logError("A database error has ocurred.", $e);
         return null;
     }
 }
 
 function updateUser(int $id, array $fields): ?array
 {
-    $db = getDatabase();
+    try {
+        $db = getDatabase();
 
-    $user = findUser($id);
+        $user = findUser($id);
 
-    if ($user === null) {
+        if ($user === null) {
+            return null;
+        }
+
+        if (empty($fields)) {
+            return $user;
+        }
+
+        $sets = [];
+
+        foreach ($fields as $key => $value) {
+            $sets[] = "{$key} = :{$key}";
+        }
+
+        $setString = implode(",", $sets);
+
+        $stmt = $db->prepare(
+            "UPDATE users SET
+            {$setString}
+            WHERE id = :id"
+        );
+
+        foreach ($fields as $key => $value) {
+            $stmt->bindParam("{$key}", $value);
+        }
+
+        $stmt->bindParam(":id", $user['id'], PDO::PARAM_INT);
+
+        $stmt->execute();
+        
+        return findUser($id);
+    }
+    catch (Throwable $e){
+        logError("A database error has ocurred.", $e);
         return null;
     }
-
-    if (empty($fields)) {
-        return $user;
-    }
-
-    $sets = [];
-
-    foreach ($fields as $key => $value) {
-        $sets[] = "{$key} = :{$key}";
-    }
-
-    $setString = implode(",", $sets);
-
-    $stmt = $db->prepare(
-        "UPDATE users SET
-        {$setString}
-        WHERE id = :id"
-    );
-
-    foreach ($fields as $key => $value) {
-        $stmt->bindParam("{$key}", $value);
-    }
-
-    $stmt->bindParam(":id", $user['id'], PDO::PARAM_INT);
-
-    $stmt->execute();
-
-    return findUser($id);
 }
 
 function deleteUser(int $id): ?array
@@ -134,7 +146,7 @@ function deleteUser(int $id): ?array
         return $user;
     }
     catch(PDOException $e) {
-        //TODO: log
+        logError("A database error has ocurred.", $e);
         return null;
     }
 }
