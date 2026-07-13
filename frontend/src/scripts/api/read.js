@@ -1,10 +1,11 @@
+import axios from 'axios';
+
 export async function getUsers(apiUrl) {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-
-    if(!response.ok) {
-        throw new Error(data.error || 'Failed to fetch users.');
+    try {
+        const response = await axios.get(apiUrl);
+        return response.data.users;
+    } catch (error) {
+        const message = error.response?.data?.error || 'Failed to load users';
+        throw new Error(message);
     }
-
-    return data.users;
 }

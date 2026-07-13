@@ -45,7 +45,7 @@ form.addEventListener('submit', async (event) => {
 
     hideError();
 
-    try{
+    try {
         const changed = {}
         if(editingId !== null) {
             if (name !== originalUser.name) changed.name = name;
