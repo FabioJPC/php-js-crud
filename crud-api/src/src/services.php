@@ -15,7 +15,7 @@ function createProduct(?array $input): array
         return ['error' => 'Invalid JSON body', 'status' => 400];
     }
 
-    $error = validateRequiredFields($input, ['name', 'age', 'email']);
+    $error = validateRequiredFields($input, ['name', 'category', 'price', 'stock']);
     if ($error) {
         return ['error' => $error, 'status' => 400];
     }
@@ -25,14 +25,19 @@ function createProduct(?array $input): array
         return ['error' => $error, 'status' => 400];
     }
 
-    $user = insertProduct([
+    if (isset($input['price'])) {
+        $price['price'] = str_replace(',', '.', $input['price']);
+    }
+
+    $product = insertProduct([
         'name' => trim($input['name']),
-        'age' => (int) $input['age'],
-        'email' => $input['email'],
+        'category' => trim($input['category']),
+        'price' => (float) $input['price'],
+        'stock' => (int) $input['stock']
     ]);
 
-    if($user) {
-        return ['data' => $user, 'status' => 201];
+    if($product) {
+        return ['data' => $product, 'status' => 201];
     }
 
     return ['data' => null, 'status' => 503];
@@ -49,7 +54,7 @@ function editProduct(?int $id, ?array $input, bool $partial = false): array
     }
 
     if (!$partial) {
-        $error = validateRequiredFields($input, ['name', 'age', 'email']);
+        $error = validateRequiredFields($input, ['name', 'category', 'price', 'stock']);
         if ($error) {
             return ['error' => $error, 'status' => 400];
         }
@@ -60,24 +65,32 @@ function editProduct(?int $id, ?array $input, bool $partial = false): array
         return ['error' => $error, 'status' => 400];
     }
 
-    $allowed = ['name', 'age', 'email'];
+    $allowed = ['name', 'category', 'price', 'stock'];
     $fields = array_intersect_key($input, array_flip($allowed));
 
     if (isset($fields['name'])) {
         $fields['name'] = trim($fields['name']);
     }
 
-    if (isset($fields['age'])) {
-        $fields['age'] = (int) $fields['age'];
+    if (isset($fields['category'])) {
+        $fields['category'] = trim($fields['category']);
     }
 
-    $user = updateProduct($id, $fields);
+    if (isset($fields['price'])) {
+        $fields['price'] = (float) $fields['price'];
+    }
 
-    if ($user === null) {
+    if (isset($fields['stock'])) {
+        $fields['stock'] = (int) $fields['stock'];
+    }
+
+    $product = updateProduct($id, $fields);
+
+    if ($product === null) {
         return ['error' => 'Product not found', 'status' => 404];
     }
 
-    return ['data' => $user, 'status' => 200];
+    return ['data' => $product, 'status' => 200];
 }
 
 function removeProduct(?int $id): array
@@ -86,11 +99,11 @@ function removeProduct(?int $id): array
         return ['error' => 'Product id is required', 'status' => 400];
     }
 
-    $user = deleteProduct($id);
+    $product = deleteProduct($id);
 
-    if ($user === null) {
+    if ($product === null) {
         return ['error' => 'Product not found', 'status' => 404];
     }
 
-    return ['data' => ['deleted' => $user], 'status' => 200];
+    return ['data' => ['deleted' => $product], 'status' => 200];
 }

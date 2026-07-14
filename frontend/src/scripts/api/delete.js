@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export async function deleteProduct(apiUrl, id) {
+export async function deleteProduct(apiUrl, id) 
+{
     try {
         const response = await axios.delete(`${apiUrl}?id=${id}`)
         return response.data;

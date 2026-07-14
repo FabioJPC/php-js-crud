@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-export async function createProduct(apiUrl, {name, category, price, stock}) {
+export async function createProduct(apiUrl, {name, category, price, stock}) 
+{
     try {
-        const response = await axios.put(apiUrl,{
+        const response = await axios.post(apiUrl, {
         name,
         category,
         price: Number(price),

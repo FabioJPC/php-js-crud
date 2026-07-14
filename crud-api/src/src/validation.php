@@ -56,7 +56,7 @@ function validateProductFields(array $input): ?string
             return "Stock must be a number";
         }
 
-        if (!filter_var($stock, FILTER_VALIDATE_INT) === false) {
+        if (filter_var($stock, FILTER_VALIDATE_INT) === false) {
             return "Stock must be an integer";
         }
 

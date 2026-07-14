@@ -19,8 +19,7 @@ function handleGet(): void
         echo json_encode(getAllProducts());
     } catch (\Throwable $e) {
         http_response_code(500);
-        #echo json_encode(['error' => 'Internal server error']);
-        echo json_encode(['error' => $e]);
+        echo json_encode(['error' => 'Internal server error' . $e->getMessage()]);
     }
 }
 
@@ -31,8 +30,7 @@ function handlePost(): void
         respond(createProduct($input));
     } catch (\Throwable $e) {
         http_response_code(500);
-        #echo json_encode(['error' => 'Internal server error']);
-        echo json_encode(['error' => $e]);
+        echo json_encode(['error' => 'Internal server error' . $e->getMessage()]);
     }
 }
 
@@ -44,7 +42,7 @@ function handlePut(): void
         respond(editProduct($id, $input));
     } catch (\Throwable $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Internal server error']);
+        echo json_encode(['error' => 'Internal server error' . $e->getMessage()]);
     }
 }
 
@@ -56,7 +54,7 @@ function handlePatch(): void
         respond(editProduct($id, $input, partial: true));
     } catch (\Throwable $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Internal server error']);
+        echo json_encode(['error' => 'Internal server error' . $e->getMessage()]);
     }
 }
 
@@ -67,7 +65,7 @@ function handleDelete(): void
         respond(removeProduct($id));
     } catch (\Throwable $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Internal server error']);
+        echo json_encode(['error' => 'Internal server error' . $e->getMessage()]);
     }
 }
 

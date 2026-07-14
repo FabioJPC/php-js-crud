@@ -37,21 +37,22 @@ function insertProduct(array $input): ?array
     $db = getDatabase();
 
     $stmt = $db->prepare(
-        "INSERT INTO users (name, age, email)
-        values (:name, :age, :email)"
+        "INSERT INTO products (name, category, price, stock)
+        values (:name, :category, :price, :stock)"
     );
 
     $stmt->bindParam(":name", $input['name'], PDO::PARAM_STR);
-    $stmt->bindParam(":age", $input['age'], PDO::PARAM_INT);
-    $stmt->bindParam(":email", $input['email'], PDO::PARAM_STR);
+    $stmt->bindParam(":category", $input['category'], PDO::PARAM_STR);
+    $stmt->bindParam(":price", $input['price'], PDO::PARAM_STR);
+    $stmt->bindParam(":stock", $input['stock'], PDO::PARAM_INT);
 
     $stmt->execute();
 
     $id = $db->lastInsertId();
 
-    $user = findProduct($id);
+    $product = findProduct($id);
 
-    return $user;
+    return $product;
 }
 
 function updateProduct(int $id, array $fields): ?array

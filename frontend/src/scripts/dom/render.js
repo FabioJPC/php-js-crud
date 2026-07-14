@@ -3,11 +3,13 @@ import { getProducts } from "../api/read.js";
 
 let productsCache = [];
 
-export function findProductById(id) {
+export function findProductById(id) 
+{
     return productsCache.find((user) => user.id === id);
 }
 
-export async function renderProducts(apiUrl) {
+export async function renderProducts(apiUrl) 
+{
     const products = await getProducts(apiUrl);
 
     productsCache = products;
@@ -20,7 +22,7 @@ export async function renderProducts(apiUrl) {
 
     productsSection.innerHTML = "";
 
-    products.forEach((products) => {
+    products.forEach((product) => {
         const productsDiv = document.createElement('div');
         productsDiv.classList.add('col-md-3');
 
@@ -28,9 +30,9 @@ export async function renderProducts(apiUrl) {
             <div class="card product-card h-100" id="${product.id}">
                 <div class="card-body">
                     <h5 class="card-title">${product.name}</h5>
-                    <p class="card-text mb-1"><strong>Category:</strong>${product.Category}</p>
-                    <p class="card-text"><strong>Price:</strong>${product.price}</p>
-                    <p class="cart-text">Stock: ${product.stock}</p>
+                    <p class="card-text mb-1"><strong>Category:</strong> ${product.category}</p>
+                    <p class="card-text"><strong>Price:</strong> ${product.price}</p>
+                    <p class="cart-text"><strong>Stock:</strong>${product.stock}</p>
                 </div>
                 <div class="card-footer d-flex gap-2">
                     <button 
@@ -48,5 +50,4 @@ export async function renderProducts(apiUrl) {
         productsSection.appendChild(productsDiv);
 
     });
-
 }

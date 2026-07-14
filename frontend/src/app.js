@@ -84,7 +84,8 @@ const cancelBtn = document.getElementById('cancel-edit');
 let editingId = null;
 let originalProduct = null;
 
-function enterEditMode(product) {
+function enterEditMode(product) 
+{
     editingId = product.id;
     originalProduct = { ...product };
 
@@ -100,7 +101,8 @@ function enterEditMode(product) {
     document.getElementById('name').focus();
 }
 
-function exitEditMode() {
+function exitEditMode() 
+{
     editingId = null;
     originalProduct = null;
     formTitle.textContent = 'Create Product';
@@ -111,17 +113,20 @@ function exitEditMode() {
 
 cancelBtn.addEventListener('click', exitEditMode);
 
-function showError(message) {
+function showError(message) 
+{
     formError.textContent = message;
     formError.classList.remove('d-none');
 }
 
-function hideError() {
+function hideError() 
+{
     formError.classList.add('d-none');
     formError.textContent = '';
 }
 
-function getProductFromCard(button) {
+function getProductFromCard(button) 
+{
     const card = button.closest('.product-card');
     return findProductById(Number(card.id));
 }

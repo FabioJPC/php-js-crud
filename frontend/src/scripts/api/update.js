@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export async function updateProduct(apiUrl, id, {name, category, price, stock}) {
+export async function updateProduct(apiUrl, id, {name, category, price, stock}) 
+{
     try {
         const response = await axios.put(`${apiUrl}?id=${id}`, { 
             name, 
@@ -15,7 +16,8 @@ export async function updateProduct(apiUrl, id, {name, category, price, stock}) 
     }
 }
 
-export async function patchProduct(apiUrl, id, fields) {
+export async function patchProduct(apiUrl, id, fields) 
+{
     if (fields.price !== undefined) {
         fields.price = Number(fields.price);
     }
