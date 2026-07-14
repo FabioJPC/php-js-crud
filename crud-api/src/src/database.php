@@ -1,6 +1,6 @@
 <?php
     function getDatabase() : PDO {
-        $connection = new PDO('sqlite:/var/www/data/database.sqlite');
+        $connection = new PDO('sqlite:/var/www/data/database.db');
 
         $connection->setAttribute(
             pdo::ATTR_ERRMODE, 

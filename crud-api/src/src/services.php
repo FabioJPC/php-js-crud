@@ -3,13 +3,13 @@
 require_once __DIR__ . '/validation.php';
 require_once __DIR__ . '/data.php';
 
-function getAllUsers(): array
+function getAllProducts(): array
 {
-    $data = getUsers();
-    return ['users' => $data['users']];
+    $data = getProducts();
+    return ['products' => $data['products']];
 }
 
-function createUser(?array $input): array
+function createProduct(?array $input): array
 {
     if (!is_array($input)) {
         return ['error' => 'Invalid JSON body', 'status' => 400];
@@ -20,12 +20,12 @@ function createUser(?array $input): array
         return ['error' => $error, 'status' => 400];
     }
 
-    $error = validateUserFields($input);
+    $error = validateProductFields($input);
     if ($error) {
         return ['error' => $error, 'status' => 400];
     }
 
-    $user = insertUser([
+    $user = insertProduct([
         'name' => trim($input['name']),
         'age' => (int) $input['age'],
         'email' => $input['email'],
@@ -38,10 +38,10 @@ function createUser(?array $input): array
     return ['data' => null, 'status' => 503];
 }
 
-function editUser(?int $id, ?array $input, bool $partial = false): array
+function editProduct(?int $id, ?array $input, bool $partial = false): array
 {
     if ($id === null) {
-        return ['error' => 'User id is required', 'status' => 400];
+        return ['error' => 'Product id is required', 'status' => 400];
     }
 
     if (!is_array($input)) {
@@ -55,7 +55,7 @@ function editUser(?int $id, ?array $input, bool $partial = false): array
         }
     }
 
-    $error = validateUserFields($input);
+    $error = validateProductFields($input);
     if ($error) {
         return ['error' => $error, 'status' => 400];
     }
@@ -71,25 +71,25 @@ function editUser(?int $id, ?array $input, bool $partial = false): array
         $fields['age'] = (int) $fields['age'];
     }
 
-    $user = updateUser($id, $fields);
+    $user = updateProduct($id, $fields);
 
     if ($user === null) {
-        return ['error' => 'User not found', 'status' => 404];
+        return ['error' => 'Product not found', 'status' => 404];
     }
 
     return ['data' => $user, 'status' => 200];
 }
 
-function removeUser(?int $id): array
+function removeProduct(?int $id): array
 {
     if ($id === null) {
-        return ['error' => 'User id is required', 'status' => 400];
+        return ['error' => 'Product id is required', 'status' => 400];
     }
 
-    $user = deleteUser($id);
+    $user = deleteProduct($id);
 
     if ($user === null) {
-        return ['error' => 'User not found', 'status' => 404];
+        return ['error' => 'Product not found', 'status' => 404];
     }
 
     return ['data' => ['deleted' => $user], 'status' => 200];

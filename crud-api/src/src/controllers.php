@@ -16,10 +16,11 @@ function respond(array $result): void
 function handleGet(): void
 {
     try {
-        echo json_encode(getAllUsers());
+        echo json_encode(getAllProducts());
     } catch (\Throwable $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Internal server error']);
+        #echo json_encode(['error' => 'Internal server error']);
+        echo json_encode(['error' => $e]);
     }
 }
 
@@ -27,10 +28,11 @@ function handlePost(): void
 {
     try {
         $input = json_decode(file_get_contents('php://input'), true);
-        respond(createUser($input));
+        respond(createProduct($input));
     } catch (\Throwable $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Internal server error']);
+        #echo json_encode(['error' => 'Internal server error']);
+        echo json_encode(['error' => $e]);
     }
 }
 
@@ -39,7 +41,7 @@ function handlePut(): void
     try {
         $input = json_decode(file_get_contents('php://input'), true);
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
-        respond(editUser($id, $input));
+        respond(editProduct($id, $input));
     } catch (\Throwable $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Internal server error']);
@@ -51,7 +53,7 @@ function handlePatch(): void
     try {
         $input = json_decode(file_get_contents('php://input'), true);
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
-        respond(editUser($id, $input, partial: true));
+        respond(editProduct($id, $input, partial: true));
     } catch (\Throwable $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Internal server error']);
@@ -62,7 +64,7 @@ function handleDelete(): void
 {
     try {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
-        respond(removeUser($id));
+        respond(removeProduct($id));
     } catch (\Throwable $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Internal server error']);

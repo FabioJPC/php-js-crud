@@ -2,6 +2,11 @@
 
 require_once __DIR__ . '/../config/config.php';
 
+// DEV ONLY: remove before final build
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
 in_array($origin, $allowedOrigins) 
@@ -19,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $uri = strtok($_SERVER['REQUEST_URI'], '?');
 
 match ($uri) {
-    '/api/users' => require __DIR__ . '/../src/api.php',
+    '/api/products' => require __DIR__ . '/../src/api.php',
     default => notFound(),
 };
 

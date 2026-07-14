@@ -17,7 +17,7 @@ function validateRequiredFields(array $input, array $fields): ?string
     return null;
 }
 
-function validateUserFields(array $input): ?string
+function validateProductFields(array $input): ?string
 {
     if (isset($input['name'])) {
         $name = trim($input['name']);
