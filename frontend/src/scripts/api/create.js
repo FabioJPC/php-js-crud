@@ -1,16 +1,17 @@
 import axios from 'axios';
 
-export async function createUser(apiUrl, {name, age, email}) {
+export async function createProduct(apiUrl, {name, category, price, stock}) {
     try {
         const response = await axios.put(apiUrl,{
         name,
-        age: Number(age),
-        email
+        category,
+        price: Number(price),
+        stock
         });
 
         return response.data;
     } catch (error) {
-        const message = error.response?.data?.error || 'Failed to create user';
+        const message = error.response?.data?.error || 'Failed to create product';
         throw new Error(message);
     }
 

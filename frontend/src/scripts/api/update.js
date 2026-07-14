@@ -1,21 +1,23 @@
-import axios from axios;
+import axios from 'axios';
 
-export async function updateUser(apiUrl, id, {name, age, email}) {
+export async function updateProduct(apiUrl, id, {name, category, price, stock}) {
     try {
-    const response = await axios.put(`${apiUrl}?id=${id}`, { 
-        name, 
-        age: Number(age), 
-        email
-    });
+        const response = await axios.put(`${apiUrl}?id=${id}`, { 
+            name, 
+            category,
+            price: Number(price), 
+            stock
+        });
+        return response.data;
     } catch (error) {
         const message = error.response?.data?.error || 'Unable to update product';
         throw new Error(message);
     }
 }
 
-export async function patchUser(apiUrl, id, fields) {
-    if (fields.age !== undefined) {
-        fields.age = Number(fields.age);
+export async function patchProduct(apiUrl, id, fields) {
+    if (fields.price !== undefined) {
+        fields.price = Number(fields.price);
     }
 
     try {

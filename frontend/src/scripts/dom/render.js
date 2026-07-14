@@ -1,35 +1,36 @@
 
-import { getUsers } from "../api/read.js";
+import { getProducts } from "../api/read.js";
 
-let usersCache = [];
+let productsCache = [];
 
-export function findUserById(id) {
-    return usersCache.find((user) => user.id === id);
+export function findProductById(id) {
+    return productsCache.find((user) => user.id === id);
 }
 
-export async function renderUsers(apiUrl) {
-    const users = await getUsers(apiUrl);
+export async function renderProducts(apiUrl) {
+    const products = await getProducts(apiUrl);
 
-    usersCache = users;
-    const usersSection = document.getElementById('users');
+    productsCache = products;
+    const productsSection = document.getElementById('products');
 
-    if(users.length === 0) {
-        usersSection.innerHTML = `<p class="text-muted">no users found!</p>`;
+    if(products.length === 0) {
+        productsSection.innerHTML = `<p class="text-muted">No products found!</p>`;
         return;
     }
 
-    usersSection.innerHTML = "";
+    productsSection.innerHTML = "";
 
-    users.forEach((user) => {
-        const userDiv = document.createElement('div');
-        userDiv.classList.add('col-md-3');
+    products.forEach((products) => {
+        const productsDiv = document.createElement('div');
+        productsDiv.classList.add('col-md-3');
 
-        userDiv.innerHTML = /*html*/`
-            <div class="card user-card h-100" id="${user.id}">
+        productsDiv.innerHTML = /*html*/`
+            <div class="card product-card h-100" id="${product.id}">
                 <div class="card-body">
-                    <h5 class="card-title">${user.name}</h5>
-                    <p class="card-text mb-1"><strong>Age:</strong>${user.age}</p>
-                    <p class="card-text"><strong>Email:</strong>${user.email}</p>
+                    <h5 class="card-title">${product.name}</h5>
+                    <p class="card-text mb-1"><strong>Category:</strong>${product.Category}</p>
+                    <p class="card-text"><strong>Price:</strong>${product.price}</p>
+                    <p class="cart-text">Stock: ${product.stock}</p>
                 </div>
                 <div class="card-footer d-flex gap-2">
                     <button 
@@ -44,7 +45,7 @@ export async function renderUsers(apiUrl) {
             </div>
         `;
 
-        usersSection.appendChild(userDiv);
+        productsSection.appendChild(productsDiv);
 
     });
 
