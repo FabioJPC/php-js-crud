@@ -10,12 +10,14 @@ RUN a2enmod rewrite
 
 COPY ./apache.conf /etc/apache2/sites-available/000-default.conf
     
-WORKDIR /var/www/
+WORKDIR /var/www/html
 
-COPY ./src /var/www/
+COPY ./src /var/www/html
 
-COPY ./data /var/www/data
+COPY ./data /var/www/html/data
 
-RUN chown -R www-data:www-data /var/www/data
+RUN sqlite3 /var/www/html/data/database.db < /var/www/html/data/init.sql
+
+RUN chown -R www-data:www-data /var/www/html/data
 
 EXPOSE 80

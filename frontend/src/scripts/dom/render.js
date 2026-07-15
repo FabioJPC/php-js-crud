@@ -8,9 +8,9 @@ export function findProductById(id)
     return productsCache.find((user) => user.id === id);
 }
 
-export async function renderProducts(apiUrl) 
+export async function renderProducts(apiUrl, query = "") 
 {
-    const products = await getProducts(apiUrl);
+    const products = await getProducts(apiUrl, query);
 
     productsCache = products;
     const productsSection = document.getElementById('products');

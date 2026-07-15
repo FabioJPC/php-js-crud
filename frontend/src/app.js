@@ -68,7 +68,7 @@ form.addEventListener('submit', async (event) => {
         if(editingId !== null) {
             if (name !== originalProduct.name) changed.name = name;
             if (category !== originalProduct.category) changed.category = category;
-            if (Number(price) !== originalProduct.price) changed.price = price;
+            if (Number(formatPrice(price)) !== originalProduct.price) changed.price = formatPrice(price);
             if (stock !== originalProduct.stock) changed.stock = stock;
 
             if (Object.keys(changed).length === 0) {
@@ -87,7 +87,9 @@ form.addEventListener('submit', async (event) => {
             exitEditMode();
 
         } else {
-            await createProduct(apiUrl, { name, category, price, stock });
+            await createProduct(
+                apiUrl, 
+                { name, category, price: Number(formatPrice(price)), stock });
         }
 
         form.reset();
@@ -132,6 +134,32 @@ function exitEditMode()
 }
 
 cancelBtn.addEventListener('click', exitEditMode);
+
+const searchInput = document.getElementById("search-input");
+searchInput.addEventListener('keydown', (event) => {
+    if(event.key === "Enter") {
+        searchProducts();
+    }
+});
+document.getElementById("search-btn").addEventListener('click', searchProducts);
+
+function searchProducts()
+{
+    const searchTerm = searchInput.value;
+    if (!searchTerm || searchTerm === ''){
+        renderProducts(apiUrl);
+        return;
+    }
+
+    renderProducts(apiUrl, searchTerm);
+}
+
+function formatPrice(price) {
+    const formattedPrice = 
+        price
+        .replace(",", ".");
+    return formattedPrice;
+}
 
 function showError(message) 
 {
