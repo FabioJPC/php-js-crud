@@ -16,8 +16,6 @@ services:
       - "8000:80"
     volumes:
       - sqlite_data:/var/www/data
-      # DEV ONLY, remove before final build
-      - ./crud-api/src:/var/www
 
 volumes:
   sqlite_data:
