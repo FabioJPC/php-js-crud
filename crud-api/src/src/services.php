@@ -3,9 +3,13 @@
 require_once __DIR__ . '/validation.php';
 require_once __DIR__ . '/data.php';
 
-function getAllProducts(): array
+function getProducts(?string $search = null): array
 {
-    $data = getProducts();
+    if ($search === null || $search === '') {
+        $data = fetchProducts();
+    } else {
+        $data = searchProducts($search);
+    }
     return ['products' => $data['products']];
 }
 

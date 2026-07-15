@@ -32,7 +32,7 @@ export async function renderProducts(apiUrl)
                     <h5 class="card-title">${product.name}</h5>
                     <p class="card-text mb-1"><strong>Category:</strong> ${product.category}</p>
                     <p class="card-text"><strong>Price:</strong> ${product.price}</p>
-                    <p class="cart-text"><strong>Stock:</strong>${product.stock}</p>
+                    <p class="cart-text"><strong>Stock:</strong> ${product.stock}</p>
                 </div>
                 <div class="card-footer d-flex gap-2">
                     <button 

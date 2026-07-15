@@ -4,7 +4,6 @@ require_once __DIR__ . '/database.php';
 
 function findProduct(int $id): ?array 
 {
-
     $db = getdatabase();
 
     $stmt = $db->prepare(
@@ -12,7 +11,7 @@ function findProduct(int $id): ?array
         WHERE id = :id"
     );
 
-    $stmt->bindParam(":id", $id);
+    $stmt->bindValue(":id", $id);
 
     $stmt->execute();
 
@@ -22,7 +21,7 @@ function findProduct(int $id): ?array
 
 }
 
-function getProducts(): array 
+function fetchProducts(): array 
 {
     $db = getdatabase();
 
@@ -30,6 +29,23 @@ function getProducts(): array
 
     return ['products' => $stmt->fetchAll(PDO::FETCH_ASSOC)];
 
+}
+
+function searchProducts(string $search): array 
+{
+    $db = getdatabase();
+
+    $stmt = $db->prepare(
+        "SELECT * 
+        FROM products
+        WHERE name LIKE :search
+        OR category LIKE :search
+        ORDER BY name"
+        );
+    $stmt->bindValue(":search", "%{$search}%", PDO::PARAM_STR);
+    $stmt->execute();
+
+    return ['products' => $stmt->fetchAll(PDO::FETCH_ASSOC)];
 }
 
 function insertProduct(array $input): ?array
@@ -41,10 +57,10 @@ function insertProduct(array $input): ?array
         values (:name, :category, :price, :stock)"
     );
 
-    $stmt->bindParam(":name", $input['name'], PDO::PARAM_STR);
-    $stmt->bindParam(":category", $input['category'], PDO::PARAM_STR);
-    $stmt->bindParam(":price", $input['price'], PDO::PARAM_STR);
-    $stmt->bindParam(":stock", $input['stock'], PDO::PARAM_INT);
+    $stmt->bindValue(":name", $input['name'], PDO::PARAM_STR);
+    $stmt->bindValue(":category", $input['category'], PDO::PARAM_STR);
+    $stmt->bindValue(":price", $input['price'], PDO::PARAM_STR);
+    $stmt->bindValue(":stock", $input['stock'], PDO::PARAM_INT);
 
     $stmt->execute();
 
@@ -60,14 +76,14 @@ function updateProduct(int $id, array $fields): ?array
 
     $db = getDatabase();
 
-    $user = findProduct($id);
+    $product = findProduct($id);
 
-    if ($user === null) {
+    if ($product === null) {
         return null;
     }
 
     if (empty($fields)) {
-        return $user;
+        return $product;
     }
 
     $sets = [];
@@ -79,16 +95,16 @@ function updateProduct(int $id, array $fields): ?array
     $setString = implode(",", $sets);
 
     $stmt = $db->prepare(
-        "UPDATE users SET
+        "UPDATE products SET
         {$setString}
         WHERE id = :id"
     );
 
     foreach ($fields as $key => $value) {
-        $stmt->bindParam("{$key}", $value);
+        $stmt->bindValue(":{$key}", $value);
     }
 
-    $stmt->bindParam(":id", $user['id'], PDO::PARAM_INT);
+    $stmt->bindValue(":id", $product['id'], PDO::PARAM_INT);
 
     $stmt->execute();
     
@@ -99,21 +115,21 @@ function deleteProduct(int $id): ?array
 {
     $db = getdatabase();
     
-    $user = findProduct($id);
+    $product = findProduct($id);
 
-    if ($user === null) {
+    if ($product === null) {
         return null;
     }
     
     $stmt = $db->prepare(
-        "DELETE FROM users
+        "DELETE FROM products
         WHERE id = :id"
     );
 
-    $stmt->bindParam(":id", $user['id']);
+    $stmt->bindValue(":id", $product['id']);
 
     $stmt->execute();
 
-    return $user;
+    return $product;
 }
 

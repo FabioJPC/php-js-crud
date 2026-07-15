@@ -3,11 +3,20 @@ import { createProduct } from './scripts/api/create.js';
 import { deleteProduct } from './scripts/api/delete.js';
 import { patchProduct, updateProduct } from './scripts/api/update.js';
 
+import 'bootstrap/dist/css/bootstrap.min.css'
+import * as bootstrap from 'bootstrap'
+
 const apiUrl = 'http://localhost:8000/api/products';
 
 const form = document.getElementById('create-product-form');
 const formError = document.getElementById('form-error');
 const productsSection = document.getElementById('products');
+
+const deleteModal = new bootstrap.Modal(
+    document.getElementById('delete-modal')
+);
+const confirmDeleteBtn = document.getElementById('confirm-delete');
+let productToDelete = null;
 
 document.addEventListener('DOMContentLoaded', () => renderProducts(apiUrl));
 
@@ -19,19 +28,27 @@ productsSection.addEventListener('click', async (event) => {
     }
 
     if(target.dataset.action === 'delete') {
-        const product = getProductFromCard(target);
+        productToDelete = getProductFromCard(target);
 
-        if(!confirm('Are you sure you want to delete this product?')) return;
+        deleteModal.show();
+    }
+});
 
-        try {
-            await deleteProduct(apiUrl, product.id);
+confirmDeleteBtn.addEventListener('click', async () => {
 
-            if (editingId === product.id) exitEditMode();
+    if (!productToDelete) return;
+
+    try {
+            await deleteProduct(apiUrl, productToDelete.id);
+
+            if (editingId === productToDelete.id) exitEditMode();
 
             renderProducts(apiUrl);
-        } catch (error) {
+    } catch (error) {
             showError(error.message);
-        }
+    } finally {
+            productToDelete = null;
+            deleteModal.hide();
     }
 });
 
@@ -66,6 +83,9 @@ form.addEventListener('submit', async (event) => {
             } else {
                 await patchProduct(apiUrl, editingId, changed);
             }
+
+            exitEditMode();
+
         } else {
             await createProduct(apiUrl, { name, category, price, stock });
         }

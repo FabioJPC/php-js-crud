@@ -14,9 +14,11 @@ function respond(array $result): void
 }
 
 function handleGet(): void
-{
+{   
+    $search = trim(filter_input(INPUT_GET, 'search') ?? '');
+
     try {
-        echo json_encode(getAllProducts());
+        echo json_encode(getProducts($search));
     } catch (\Throwable $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Internal server error' . $e->getMessage()]);
