@@ -12,12 +12,16 @@ COPY ./apache.conf /etc/apache2/sites-available/000-default.conf
     
 WORKDIR /var/www/html
 
-COPY ./src /var/www/html
+COPY ./src .
 
-COPY ./data /var/www/html/data
+COPY ./data/init.sql ./data/init.sql
 
-RUN sqlite3 /var/www/html/data/database.db < /var/www/html/data/init.sql
+COPY ./entrypoint.sh .
 
-RUN chown -R www-data:www-data /var/www/html/data
+RUN chmod +x ./entrypoint.sh
+
+RUN chown -R www-data:www-data ./data
 
 EXPOSE 80
+
+ENTRYPOINT [ "./entrypoint.sh" ]
