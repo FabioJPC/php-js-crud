@@ -2,11 +2,6 @@
 
 require_once __DIR__ . '/../config/config.php';
 
-// DEV ONLY: remove before final build
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
 in_array($origin, $allowedOrigins) 
